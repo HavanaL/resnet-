@@ -1,0 +1,21 @@
+from keras.applications.resnet50 import ResNet50
+from keras.preprocessing import image
+from keras.applications.resnet50 import  decode_predictions
+import glob
+import numpy as np
+import os
+
+os.chdir('E:\\flower\\train\\category_1')
+data=glob.glob('*.jpg')
+y=[]
+for i in range(len(data)):
+  images= image.load_img(data[i], target_size=(224, 224))
+  x = image.img_to_array(images)
+  x = np.expand_dims(x, axis=0)
+  y.append(x)
+  print('loading no.%s image' %i)
+
+x=np.concatenate([x for x in y])
+model = ResNet50(weights=None, include_top=True, classes=997)
+preds = model.predict(x)
+print('predicted:', decode_predictions(preds, top=3))
